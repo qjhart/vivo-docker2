@@ -11,6 +11,8 @@ services:
   solr-vivo:
     build:
       context: ./solr-vivo
+    volumes:
+      - solr-data:/var/solr
     ports:
       - 8984:8983
 
@@ -26,6 +28,8 @@ services:
     volumes:
       - ./example-config:/usr/local/vivo/home/config
       - tdb-model-data:/usr/local/vivo/home/tdbModels
+      - vivo-upgrade-data:/usr/local/vivo/home/upgrade
+      - vivo-uploads-data:/usr/local/vivo/home/uploads
     depends_on:
       - mariadb
       - solr-vivo
@@ -71,3 +75,5 @@ volumes:
   solr-data:
   maria-data:
   tdb-model-data:
+  vivo-upgrade-data:
+  vivo-uploads-data:
