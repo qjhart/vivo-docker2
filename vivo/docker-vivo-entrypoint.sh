@@ -2,7 +2,8 @@
 
 # Template for key building
 function umls_properties() {
-  echo "apikey = $UMLS_APIKEY"
+  echo "apikey = ${UMLS_APIKEY-UMLS_APIKEY not set}"
+  echo "pagesize = ${UMLS_PAGESIZE:-25}"
 }
 echo "entrypoint"
 
