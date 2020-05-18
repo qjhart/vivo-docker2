@@ -28,7 +28,10 @@ function init(app, proxy) {
         console.error('CAS Service: CAS login failure.  No username found');
       }
 
-      proxy.web(req, res, { target: `http://vivo:8080/vivo/loginExternalAuthReturn` });
+      proxy.web(req, res, { 
+        target: `http://vivo:8080/vivo/loginExternalAuthReturn`,
+        selfHandleResponse : true
+      });
     });
   };
 }

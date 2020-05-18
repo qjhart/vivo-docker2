@@ -43,7 +43,10 @@ app.use('/vivo/loginExternalAuthReturn', cas.init(app, proxy));
 app.use('/vivo/logout', (req, res) => {
   console.log('CAS Service: destorying session');
   req.session.destroy();
-  proxy.web(req, res, { target: `http://vivo:8080/vivo/logout` });
+  proxy.web(req, res, { 
+    target: `http://vivo:8080/vivo/logout`,
+    selfHandleResponse : true
+  });
 });
 
 // handle vivo logins
@@ -93,6 +96,17 @@ proxy.on('proxyRes', async (proxyRes, expReq, expRes) => {
     }
 
     expRes.redirect(getRedirectUrl(expReq.session.originalUrl));
+    return;
+  }
+
+  // after case login, redirect to page user was trying to get at
+  if( expReq.originalUrl === '/vivo/loginExternalAuthReturn' ) {
+    expRes.redirect(getRedirectUrl(expReq.session.originalUrl));
+  }
+
+  // after logout, redirect to ucd logout page
+  if( expReq.originalUrl === '/vivo/logout' ) {
+    expRes.redirect('/vivo/ucd-login/');
   }
 });
 
