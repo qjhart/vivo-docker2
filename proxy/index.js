@@ -75,12 +75,12 @@ proxy.on('proxyRes', async (proxyRes, expReq, expRes) => {
       let location = resp.headers.get('location');
       if( location && resp.status === 302 && new URL(location).pathname === '/vivo/authenticate' ) {
         console.log('Invalid username/password login');
-        expRes.redirect('/vivo/ucd-login.html?error='+encodeURIComponent('Invalid username or password'));
+        expRes.redirect('/vivo/ucd-login/?vivo-login=true&error='+encodeURIComponent('Invalid username or password'));
         return;
       }
     } catch(e) {
       // badness
-      expRes.redirect('/vivo/ucd-login.html?error='+encodeURIComponent(e.message));
+      expRes.redirect('/vivo/ucd-login/?vivo-login=true&error='+encodeURIComponent(e.message));
       console.error('Error on proxy response', e);
       return;
     }
@@ -102,18 +102,34 @@ function getRedirectUrl(url) {
   return url;
 }
 
-app.get('/vivo/ucd-login.html', (req, res) => {
-  res.send(fs.readFileSync(path.join(__dirname, 'ucd-login.html'), 'utf-8'));
-})
+app.get('/vivo/ucd-login/', (req, res) => {
+  // redirect to tailing slash to paths work as client expects
+  if( req.originalUrl === '/vivo/ucd-login' ) {
+    return res.redirect('/vivo/ucd-login/');
+  }
+  res.send(fs.readFileSync(path.join(__dirname, 'assets', 'ucd-login.html'), 'utf-8'));
+});
+// serve login assets
+const loginAssets = express.static(path.join(__dirname, 'assets'));
+app.get(/^\/vivo\/ucd-login\/.*/, (req, res, next) => {
+  req.url = req.url.replace('/vivo/ucd-login', '');
+  req.originalUrl = req.originalUrl.replace('/vivo/ucd-login', '');
+  loginAssets(req, res, next);
+});
 
 app.use(/.*/, (req, res) => {
-  // TODO check for authentication
+  // always allow favicon access
+  if( req.originalUrl === '/favicon.ico' ) {
+    proxy.web(req, res, { target: `http://vivo:8080/vivo${req.originalUrl}` });
+    return;
+  }
+
   if( !req.session[cas.cas.session_name] && !req.session['vivo-session'] ) {
     if( !req.session.originalUrl ) {
       console.log('setting originalUrl:', req.originalUrl);
       req.session.originalUrl = req.originalUrl;
     }
-    res.redirect('/vivo/ucd-login.html');
+    res.redirect('/vivo/ucd-login/');
     return;
   }
 

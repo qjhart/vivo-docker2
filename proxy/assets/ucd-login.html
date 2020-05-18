@@ -1,26 +1,81 @@
 <html>
   <head>
     <title>UC Davis Library - Research Registry</title>
+    <link rel="stylesheet" type="text/css" href="theme.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   </head>
   <body>
-    <div>Welcome</div>
+    <header>
+      <div class="logo">
+        <a href="https://www.ucdavis.edu/" target="_blank" rel="noopener">
+          <img src="images/logo.svg" alt="Home" />
+        </a>
+      </div>  
+      
+      <div class="page-title">
+        <strong>Research Registry</strong> <em>Prototype</em>
+      </div>
+    </header>
 
-    <div>
-      <a class="blue button" 
-        href="/vivo/loginExternalAuth" 
-        title="external authentication name">Log in using UCD CAS
-      </a>
-    </div>
+    <main>
+      <div class="login-box-wrapper">
+        <div class="login-box">
+          <p>
+            The <strong>UC Davis Research Registry</strong> is a research-focused discovery 
+            tool that enables collaboration among scholars of all disciplines 
+            specifically created to help with the COVID-19 pandemic.
+          </p>
 
-    <div>
-      <form action="/vivo/authenticate" method="POST">
-        <label for="loginName">Username:</label>
-        <input type="text" id="loginName" name="loginName"><br><br>
-        <label for="loginPassword">Password:</label>
-        <input type="password" id="loginPassword" name="loginPassword"><br><br>
-        <input type="text" id="loginForm" name="loginForm" value="Log in" style="display:none">
-        <input type="submit" value="Submit">
-      </form>
-    </div>
+          <p>
+            To access the registry, log in using your UC Davis credentials.
+          </p>
+
+          <a class="blue button" 
+            href="/vivo/loginExternalAuth" 
+            title="external authentication name">Log in with UC Davis CAS
+          </a>
+
+
+          <div class="up-login">
+            <h2>UC Davis Library - Research Registry account</h2>
+            <form action="/vivo/authenticate" method="POST">
+              <table>
+                <tr>
+                  <td><label for="loginName">Username</label></td>
+                  <td><input type="text" id="loginName" name="loginName"></td>
+                </tr>
+                <tr>
+                  <td><label for="loginPassword">Password</label></td>
+                  <td><input type="password" id="loginPassword" name="loginPassword"></td>
+                </tr>
+              </table>
+              <div id="up-error-message"></div>
+              <input type="text" id="loginForm" name="loginForm" value="Log in" style="display:none">
+              <input type="submit" class="blue button"  value="Login">
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function getParameterByName(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, '\\$&');
+          var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+      var vivoLogin = getParameterByName('vivo-login')
+      if( (vivoLogin || '').toLowerCase().trim() === 'true' ) {
+        document.querySelector('.up-login').style.display = 'block';
+      }
+      var errMsg = getParameterByName('error');
+      if( errMsg ) {
+        document.querySelector('#up-error-message').textContent = getParameterByName('error');
+      }
+    </script>
   </body>
 </html>

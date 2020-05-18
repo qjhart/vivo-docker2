@@ -56,11 +56,7 @@ header > .logo {
   color: #6884A3;
 }
 
-a.blue {
-  background-color: #002855;
-}
-
-a.button {
+.button {
   display: inline-block;
   padding: 13px 30px;
   vertical-align: middle;
@@ -71,6 +67,15 @@ a.button {
   white-space: nowrap;
   text-decoration: none;
   font-weight: 700;
+}
+
+.button.blue {
+  background-color: #002855;
+}
+
+[type="submit"].button.blue {
+  border: none;
+  font-size: 16px;
 }
 
 main {
@@ -103,6 +108,7 @@ main {
   max-width: 570px;
   background-color: rgba(255, 255, 255, 0.8);
   line-height: 1.5rem;
+  margin-right: 15px;
 }
 
 .login-box p:first-of-type {
@@ -111,6 +117,33 @@ main {
 
 .login-box p:last-of-type {
   margin-bottom: 20px;
+}
+
+.up-login {
+  margin-top: 50px;
+  display: none;
+}
+
+.up-login h2 {
+  margin-top: 0px;
+  margin-bottom: 8px;
+}
+
+.up-login form div {
+  margin-bottom: 8px;
+}
+
+.up-login form input[type="text"], 
+.up-login form input[type="password"]  {
+  height: 35px;
+  font-size: 16px;
+  line-height: 30px;
+  padding: 2px 5px;
+  /* border: none; */
+}
+
+#up-error-message {
+  color: red;
 }
 
 /* Viewports */

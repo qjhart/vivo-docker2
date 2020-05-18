@@ -7,6 +7,7 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm install --production
 
+COPY assets assets
 COPY index.js .
 COPY cas.js .
 
