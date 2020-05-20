@@ -101,6 +101,13 @@ proxy.on('proxyRes', async (proxyRes, expReq, expRes) => {
 
   // after case login, redirect to page user was trying to get at
   if( expReq.originalUrl === '/vivo/loginExternalAuthReturn' ) {
+    // see if we have a first time user
+    if( proxyRes.headers && proxyRes.headers.location === '/vivo/accounts/firstTimeExternal' ) {
+      expReq.session.originalUrl = '';
+      expRes.redirect(proxyRes.headers.location);
+      return;
+    }
+
     expRes.redirect(getRedirectUrl(expReq.session.originalUrl));
   }
 
