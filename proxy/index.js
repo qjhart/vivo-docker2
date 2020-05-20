@@ -39,7 +39,8 @@ app.use((req, res, next) => {
 app.get('/vivo/loginExternalAuth', (req, res) => {
   proxy.web(req, res, { target: `http://vivo:8080${req.originalUrl}` });
 });
-app.use('/vivo/loginExternalAuthReturn', cas.init(app, proxy));
+app.use('/vivo/ucd-firewall', cas.init(app, proxy));
+app.use('/vivo/loginExternalAuthReturn', cas.init(app, proxy, true));
 app.use('/vivo/logout', (req, res) => {
   console.log('CAS Service: destorying session');
   req.session.destroy();

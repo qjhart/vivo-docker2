@@ -5,13 +5,18 @@ let cas = new CASAuthentication({
   service_url : process.env.APP_URL
 });
 
-function init(app, proxy) {
+function init(app, proxy, vivoAuth=false) {
 
   return (req, res) => {
     console.log('CAS Service: starting CAS redirection');
 
-    req.query.returnTo = process.env.APP_URL+'/vivo/loginExternalAuthReturn';
-    cas.service_url = process.env.APP_URL+'/vivo/loginExternalAuthReturn';
+    if( vivoAuth ) {
+      req.query.returnTo = process.env.APP_URL+'/vivo/loginExternalAuthReturn';
+      cas.service_url = process.env.APP_URL+'/vivo/loginExternalAuthReturn';
+    } else {
+      req.query.returnTo = process.env.APP_URL+'/vivo/ucd-firewall';
+      cas.service_url = process.env.APP_URL+'/vivo/ucd-firewall';
+    }
 
     cas.bounce(req, res, async () => {
       console.log('CAS Service: CAS redirection complete');
@@ -28,10 +33,15 @@ function init(app, proxy) {
         console.error('CAS Service: CAS login failure.  No username found');
       }
 
-      proxy.web(req, res, { 
-        target: `http://vivo:8080/vivo/loginExternalAuthReturn`,
-        selfHandleResponse : true
-      });
+      if( vivoAuth ) {
+        proxy.web(req, res, { 
+          target: `http://vivo:8080/vivo/loginExternalAuthReturn`,
+          selfHandleResponse : true
+        });
+      } else {
+        res.redirect('/vivo/')
+      }
+      
     });
   };
 }
