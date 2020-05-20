@@ -146,7 +146,7 @@ app.use(/.*/, (req, res) => {
     return;
   }
 
-  if( !req.session[cas.cas.session_name] && !req.session['vivo-session'] ) {
+  if( !req.session['firewall-cas-session'] && !req.session['vivo-session'] ) {
     if( !req.session.originalUrl ) {
       console.log('setting originalUrl:', req.originalUrl);
       req.session.originalUrl = req.originalUrl;

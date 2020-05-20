@@ -1,11 +1,14 @@
 const CASAuthentication = require('cas-authentication');
 
-let cas = new CASAuthentication({
-  cas_url     : process.env.CAS_URL,
-  service_url : process.env.APP_URL
-});
+
 
 function init(app, proxy, vivoAuth=false) {
+
+  let cas = new CASAuthentication({
+    cas_url     : process.env.CAS_URL,
+    service_url : process.env.APP_URL,
+    session_name : vivoAuth ? 'vivo-cas-session' : 'firewall-cas-session'
+  });
 
   return (req, res) => {
     console.log('CAS Service: starting CAS redirection');
@@ -48,4 +51,4 @@ function init(app, proxy, vivoAuth=false) {
 
 
 
-module.exports = {init, cas};
+module.exports = {init};
