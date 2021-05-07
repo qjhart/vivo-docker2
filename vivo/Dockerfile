@@ -1,4 +1,5 @@
-FROM tomcat:8.5.39-jre8
+#FROM tomcat:8.5.39-jre8
+FROM tomcat:8.5.65
 
 MAINTAINER Justin Merz <jrmerz@ucdavis.edu>
 MAINTAINER Quinn Hart <qjhart@ucdavis.edu>
@@ -19,10 +20,10 @@ RUN wget -O vivo.tar.gz https://github.com/vivo-project/VIVO/releases/download/v
 RUN mvn install -s example-settings.xml
 
 # clean up
-RUN rm -r /opt/vivo
-RUN rm -r /usr/local/tomcat/webapps/vivosolr
-RUN rm -r /usr/local/tomcat/webapps/docs
-RUN rm -r /usr/local/tomcat/webapps/examples
+RUN rm -rf /opt/vivo
+RUN rm -rf /usr/local/tomcat/webapps/vivosolr
+RUN rm -rf /usr/local/tomcat/webapps/docs
+RUN rm -rf /usr/local/tomcat/webapps/examples
 
 # Set properties
 # Adjust logging, you can mount over this in docker-compose to further adjust
